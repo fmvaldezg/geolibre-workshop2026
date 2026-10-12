@@ -1,0 +1,107 @@
+/* Shared styles for the whole deck. Slidev loads this file automatically. */
+
+:root {
+  --gl-teal: #0e7c7b;
+  --gl-blue: #1f5f8b;
+  --gl-orange: #e08a1e;
+  --gl-cherry: #a41e35; /* Temple cherry, used on the closing slide */
+  --gl-ink-soft: #5b6b73;
+  --slidev-theme-primary: #0e7c7b;
+}
+
+/* Gradient headings on content slides (the cover and closing slides keep white text). */
+.slidev-layout:not(.cover):not(.end) h1 {
+  background-image: linear-gradient(90deg, var(--gl-teal) 0%, var(--gl-blue) 70%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  max-width: 100%;
+}
+/* Centered layouts: keep the shrink-wrapped heading in the middle */
+.slidev-layout.section h1,
+.slidev-layout.text-center h1 {
+  margin-inline: auto;
+}
+
+.slidev-layout a {
+  color: var(--gl-teal);
+}
+
+/* Menu paths, written in the slides as [Add Data → Vector Layer]{.menu} */
+.slidev-layout .menu {
+  padding: 0.08em 0.45em;
+  border-radius: 5px;
+  background: rgba(14, 124, 123, 0.1);
+  color: #0a5c5b;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Small print at the bottom of a slide */
+.slidev-layout .fine {
+  font-size: 0.72em;
+  line-height: 1.45;
+  color: var(--gl-ink-soft);
+}
+
+/* A short "heads up" line */
+.slidev-layout .heads-up {
+  margin-top: 1rem;
+  padding: 0.5rem 0.9rem;
+  border-left: 4px solid var(--gl-orange);
+  background: rgba(224, 138, 30, 0.09);
+  font-size: 0.85em;
+  line-height: 1.45;
+}
+
+/* Three or four short statements side by side */
+.slidev-layout .pillars {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+.slidev-layout .pillars > div {
+  padding-top: 0.9rem;
+  border-top: 4px solid var(--gl-teal);
+}
+.slidev-layout .pillars h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.25rem;
+  color: #14222b;
+}
+.slidev-layout .pillars p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* Tighter tables */
+.slidev-layout table {
+  font-size: 0.9em;
+}
+.slidev-layout th {
+  text-align: left;
+}
+
+/* Closing slide */
+.slidev-layout.end {
+  background: linear-gradient(135deg, rgb(164, 30, 53) 0%, rgb(149, 56, 71) 100%);
+}
+.slidev-layout.end a {
+  color: #fff;
+}
+
+/* Cover: keep links readable on the dark background */
+.slidev-layout.cover a,
+.slidev-layout.cover .slidev-icon-btn {
+  color: #fff;
+}
+
+/* Long URLs wrap inside their code box instead of running off the slide */
+.slidev-layout .wrap-code pre,
+.slidev-layout .wrap-code code {
+  white-space: pre-wrap !important;
+  word-break: break-all;
+}

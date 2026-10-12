@@ -1,0 +1,97 @@
+name: Deploy Slidev to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  # Folder that holds slides.md
+  DECK_DIR: GeoLibre_intro2026
+  # Google Analytics measurement ID. Set to '' to publish without analytics.
+  GA_ID: G-RC52W8J799
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    # npm ci installs the exact versions in package-lock.json.
+    # Keep it: a fresh "npm install" of the newest Slidev currently fails to build.
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ${{ env.DECK_DIR }}
+
+    # The base path is taken from the repository name,
+    # so the site works at https://<user>.github.io/<repo>/ without editing anything.
+    - name: Build
+      run: npx slidev build --base "/${GITHUB_REPOSITORY#*/}/"
+      working-directory: ${{ env.DECK_DIR }}
+
+    - name: Add Google Analytics
+      if: env.GA_ID != ''
+      working-directory: ${{ env.DECK_DIR }}
+      run: |
+        cat > add_analytics.py << 'EOF'
+        import os
+
+        ga_id = os.environ["GA_ID"]
+        snippet = f'''<script async src="https://www.googletagmanager.com/gtag/js?id={ga_id}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){{dataLayer.push(arguments);}}
+          gtag('js', new Date());
+          gtag('config', '{ga_id}');
+        </script>
+        '''
+
+        # 404.html is the copy GitHub Pages serves for deep links such as /5
+        for name in ("dist/index.html", "dist/404.html"):
+            if not os.path.exists(name):
+                continue
+            with open(name) as f:
+                html = f.read()
+            if "googletagmanager" not in html:
+                html = html.replace("</head>", snippet + "</head>", 1)
+                with open(name, "w") as f:
+                    f.write(html)
+            print("Analytics added to", name)
+        EOF
+        python3 add_analytics.py
+        rm add_analytics.py
+        grep -q "gtag" dist/index.html || { echo "Analytics code NOT found"; exit 1; }
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{ env.DECK_DIR }}/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
