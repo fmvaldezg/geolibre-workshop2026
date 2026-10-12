@@ -30,6 +30,44 @@ October 2026
   </a>
 </div>
 
+<img 
+  src="https://geolibre.app/assets/geolibre-icon.png" 
+  class="absolute"
+  style="left: 700px; top: 350px; width:130px; background-color: rgba(255, 255, 255, 0); padding: 10px; border-radius: 8px;"
+  alt="Qgis logo"
+/>
+
+<img 
+  src="/assets/librarylogo.png" 
+  class="absolute"
+  style="left: 70px; top: 330px; width:300px; background-color: rgba(255, 255, 255, 0); padding: 10px; border-radius: 8px;"
+  alt="OSM logo"
+/>
+
+<style>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 2;
+}
+
+.abs-br {
+  position: absolute !important;
+  bottom: 0.5rem !important;
+  right: 0.5rem !important;
+  z-index: 10 !important;
+}
+</style>
 <!--
 WELCOME (5 min, together with the next three slides)
 
