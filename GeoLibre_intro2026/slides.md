@@ -778,6 +778,12 @@ Built with [Slidev](https://sli.dev).
 </div>
 
 ---
+layout: image
+transition: slide-up
+image: /assets/workshoppromo.png
+--- 
+
+---
 layout: end
 ---
 
